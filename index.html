@@ -1,0 +1,271 @@
+# web-intro-edit5.
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Báo Cáo Kết Quả Thực Hành - Tab Network</title>
+  <style>
+    /* Reset CSS cơ bản */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f0f3f6;
+      padding: 40px 20px;
+    }
+
+    /* Khung chứa trung tâm */
+    .report-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Tiêu đề báo cáo */
+    header {
+      border-bottom: 3px solid #34495e;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      color: #2c3e50;
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+
+    .meta-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      color: #7f8c8d;
+      font-size: 0.95rem;
+    }
+
+    .meta-info span strong {
+      color: #34495e;
+    }
+
+    /* Hướng dẫn ngắn */
+    .summary-box {
+      background-color: #e8f4fd;
+      border-left: 5px solid #3498db;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 30px;
+      font-size: 0.95rem;
+      color: #2c3e50;
+    }
+
+    /* Bộ lọc tương tác (Filter) */
+    .filter-wrapper {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .filter-btn {
+      background: #ecf0f1;
+      border: 1px solid #bdc3c7;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: #3498db;
+      color: #fff;
+      border-color: #2980b9;
+    }
+
+    /* Bảng dữ liệu Network Log */
+    .table-responsive {
+      overflow-x: auto;
+      border: 1px solid #dcdde1;
+      border-radius: 6px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #dcdde1;
+    }
+
+    th {
+      background-color: #34495e;
+      color: #ffffff;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+
+    tr:hover {
+      background-color: #f1f2f6;
+    }
+
+    /* Định dạng nhãn (Badge) cho cột Loại tài nguyên */
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .badge-html { background-color: #ffeaa7; color: #d63031; }
+    .badge-css { background-color: #74b9ff; color: #0984e3; }
+    .badge-js { background-color: #ffeaa7; color: #e1b12c; }
+    .badge-img { background-color: #fab1a0; color: #d63031; }
+
+    /* Định dạng cột trạng thái (Status) giả lập DevTools */
+    .status-ok {
+      color: #2ecc71;
+      font-weight: bold;
+    }
+
+    /* Chân trang */
+    footer {
+      text-align: center;
+      margin-top: 35px;
+      color: #bdc3c7;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 768px) {
+      .meta-info { flex-direction: column; gap: 5px; }
+      .filter-wrapper { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="report-container">
+    
+    <header>
+      <h1>Báo Cáo Thực Hành: Giám Sát Thẻ Network</h1>
+      <div class="meta-info">
+        <span><strong>Môn học:</strong> Phát triển Ứng dụng Web</span>
+        <span><strong>Bài thực hành:</strong> Sử dụng Trình duyệt DevTools</span>
+        <span><strong>Năm thực hiện:</strong> 2026</span>
+      </div>
+    </header>
+
+    <section class="summary-box">
+      <strong>📝 Ghi chú mục tiêu:</strong> Bảng nhật ký dưới đây ghi lại danh sách các tài nguyên được hệ thống tải về khi truy cập trang mẫu. Việc giám sát giúp phân tích rõ thực thể nào đưa ra yêu cầu (Client Request) và thực thể nào chịu trách nhiệm phản hồi thông tin dữ liệu (Server Response).
+    </section>
+
+    <div class="filter-wrapper">
+      <span>Bộ lọc nhanh:</span>
+      <button class="filter-btn active" onclick="filterNetwork('all', this)">All</button>
+      <button class="filter-btn" onclick="filterNetwork('document', this)">HTML</button>
+      <button class="filter-btn" onclick="filterNetwork('stylesheet', this)">CSS</button>
+      <button class="filter-btn" onclick="filterNetwork('script', this)">JS</button>
+      <button class="filter-btn" onclick="filterNetwork('image', this)">Images</button>
+    </div>
+
+    <section class="table-responsive">
+      <table id="networkTable">
+        <thead>
+          <tr>
+            <th style="width: 25%;">Tên Tài Nguyên (Name)</th>
+            <th style="width: 15%;">Loại (Type)</th>
+            <th style="width: 10%;">Trạng Thái</th>
+            <th style="width: 25%;">Bên Gửi Yêu Cầu (Client Request)</th>
+            <th style="width: 25%;">Bên Trả Phản Hồi (Server Response)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-type="document">
+            <td><strong>index.html</strong></td>
+            <td><span class="badge badge-html">document</span></td>
+            <td><span class="status-ok">200 OK</span></td>
+            <td>Trình duyệt nhập URL (Người dùng kích hoạt)</td>
+            <td>Hệ thống Web Server (Mã nguồn Host)</td>
+          </tr>
+          <tr data-type="stylesheet">
+            <td><strong>style.css</strong></td>
+            <td><span class="badge badge-css">stylesheet</span></td>
+            <td><span class="status-ok">200 OK</span></td>
+            <td>Trình duyệt phân tích HTML bắt gặp thẻ &lt;link&gt;</td>
+            <td>Máy chủ CDN lưu trữ file CSS tĩnh</td>
+          </tr>
+          <tr data-type="script">
+            <td><strong>app.js</strong></td>
+            <td><span class="badge badge-js">script</span></td>
+            <td><span class="status-ok">200 OK</span></td>
+            <td>Trình duyệt đọc HTML bắt gặp thẻ &lt;script&gt;</td>
+            <td>Hệ thống Web Server (Mã nguồn Host)</td>
+          </tr>
+          <tr data-type="image">
+            <td><strong>logo.png</strong></td>
+            <td><span class="badge badge-img">image</span></td>
+            <td><span class="status-ok">200 OK</span></td>
+            <td>Trình duyệt đọc DOM bắt gặp thẻ &lt;img src="..."&gt;</td>
+            <td>Kho lưu trữ dữ liệu hình ảnh (Cloud Storage)</td>
+          </tr>
+          <tr data-type="image">
+            <td><strong>banner.jpg</strong></td>
+            <td><span class="badge badge-img">image</span></td>
+            <td><span class="status-ok">200 OK</span></td>
+            <td>Trình duyệt đọc thuộc tính background-image của CSS</td>
+            <td>Kho lưu trữ dữ liệu hình ảnh (Cloud Storage)</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <footer>
+      <p>Sinh viên thực hiện hoàn thành biểu mẫu báo cáo kỹ thuật Network Tab</p>
+    </footer>
+
+  </main>
+
+  <script>
+    function filterNetwork(type, button) {
+      // 1. Reset trạng thái active của tất cả các nút bấm filter
+      const buttons = document.querySelectorAll('.filter-btn');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      
+      // 2. Thêm class active cho nút vừa click
+      button.classList.add('active');
+
+      // 3. Thực hiện lọc ẩn/hiển thị các dòng trong bảng tương ứng
+      const rows = document.querySelectorAll('#networkTable tbody tr');
+      rows.forEach(row => {
+        const rowType = row.getAttribute('data-type');
+        if (type === 'all' || rowType === type) {
+          row.style.display = ''; // Hiển thị dòng
+        } else {
+          row.style.display = 'none'; // Ẩn dòng
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
